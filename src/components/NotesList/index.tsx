@@ -1,33 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import * as uuid from 'uuid';
 import { NotesListItem } from '../NotesListItem';
-import { Note } from '../../domain/note';
+import { useQuery } from '../../hooks/useQuery';
+import { useAppSelector } from '../../app/hooks';
 
 export const NotesList: React.FC = () => {
-  const [selected, setSelected] = useState<string>();
-  const [notes, setNotes] = useState<Note[]>(
-    [
-      {
-        id: uuid.v4(),
-        title: 'Note title',
-        text: 'kek lol kek lol',
-        date: new Date(),
-      },
-      {
-        id: uuid.v4(),
-        title: 'Note title very very long long long long long',
-        text: 'kek lol kek lol blah blah blah blah aaa aaa',
-        date: new Date(2021, 10, 15),
-      },
-      {
-        id: uuid.v4(),
-        title: 'Note title',
-        text: 'kek lol kek lol',
-        date: new Date(2100, 2, 29),
-      },
-    ],
-  );
+  const query = useQuery();
+  const selected = query.get('note');
+  const notes = useAppSelector((state) => state.notes);
 
+  /** Notes sorted from newer to older */
   const sorted = useMemo(() => [...notes].sort((a, b) => b.date.valueOf() - a.date.valueOf()), [notes]);
 
   return (
@@ -37,7 +18,6 @@ export const NotesList: React.FC = () => {
           key={note.id}
           note={note}
           selected={note.id === selected}
-          onSelect={() => setSelected(note.id)}
         />
       ))}
     </div>
