@@ -12,19 +12,19 @@ const initialState: NotesState = {
     {
       id: 'c991a900-ddc1-4623-b224-2508856fe86e',
       title: 'Note title',
-      text: 'kek lol kek lol',
+      textBeginning: 'kek lol kek lol',
       date: new Date().toISOString(),
     },
     {
       id: 'f4f14858-4afb-48d4-bbb7-7d44cf01fe08',
       title: 'Note title very very long long long long long',
-      text: 'kek lol kek lol blah blah blah blah aaa aaa',
+      textBeginning: 'kek lol kek lol blah blah blah blah aaa aaa',
       date: new Date(2021, 10, 15).toISOString(),
     },
     {
       id: 'afcc153b-ca75-44f3-b9ed-f26ac9fa4526',
       title: 'Note title',
-      text: 'kek lol kek lol',
+      textBeginning: 'kek lol kek lol',
       date: new Date(2100, 2, 29).toISOString(),
     },
   ],
@@ -38,7 +38,7 @@ export const createNoteAction = createAsyncThunk<Note, (id: string) => void>(
     return {
       id,
       title: null,
-      text: null,
+      textBeginning: null,
       date: new Date().toISOString(),
     };
   },
@@ -51,6 +51,14 @@ const notesSlice = createSlice({
     deleteNoteAction(state, action: PayloadAction<string>) {
       state.notes = state.notes.filter((n) => n.id !== action.payload);
     },
+    updateNoteAction(state, { payload: { id, title, text } }: PayloadAction<{id: string; title: string; text: string}>) {
+      const finded = state.notes.find((n) => n.id === id);
+      if (finded != null) {
+        finded.title = title.slice(0, 100) ?? null; // first 100 chars -- beginning of title
+        finded.textBeginning = text.slice(0, 100) ?? null; // first 100 chars -- beginning of text
+        finded.date = new Date().toISOString();
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createNoteAction.fulfilled, (state, { payload }) => {
@@ -60,4 +68,4 @@ const notesSlice = createSlice({
 });
 
 export const notesReducer = notesSlice.reducer;
-export const { deleteNoteAction } = notesSlice.actions;
+export const { updateNoteAction, deleteNoteAction } = notesSlice.actions;

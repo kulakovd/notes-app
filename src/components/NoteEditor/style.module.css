@@ -1,0 +1,4 @@
+.editor h1 {
+  @apply text-2xl;
+  @apply font-bold;
+}
