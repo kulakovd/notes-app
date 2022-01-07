@@ -23,11 +23,11 @@ export const NotesListItem: React.FC<NotesListItemProps> = ({
   return (
     <Link to={`/?note=${note.id}`}>
       <div className={classes} role="button">
-        <span className="font-bold truncate block">{note.title}</span>
+        <span className="font-bold truncate block">{note.title ?? 'Новая заметка'}</span>
         <div className="text-xs whitespace-nowrap truncate">
-          <span className="font-bold">{note.date.toLocaleDateString()}</span>
+          <span className="font-bold">{new Date(note.date).toLocaleDateString()}</span>
           {' '}
-          <span>{note.text.slice(0, 100)}</span>
+          <span>{note?.text?.slice(0, 100)}</span>
         </div>
       </div>
     </Link>

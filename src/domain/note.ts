@@ -1,6 +1,6 @@
 export interface Note {
   id: string;
-  title: string;
-  text: String;
-  date: Date;
+  title: string | null;
+  text: string | null;
+  date: string;
 }
