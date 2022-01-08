@@ -2,6 +2,8 @@
 
 Exactly like Apple's notes app but web (so windows users can write notes too).
 
+[Try it out right now (hosted on firebase)](https://notes-app-29c2d.web.app)
+
 ## Top features
 
 1. Create new note
