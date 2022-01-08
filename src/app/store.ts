@@ -1,15 +1,27 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { NotesRepository } from './notesRepositry';
 import { notesReducer } from './notesSlice';
+import { ThunkApi } from './thunkApi';
 
-export const store = configureStore({
-  reducer: notesReducer,
-});
+export const createStore = (notesRepo: NotesRepository) => {
+  const extra: ThunkApi['extra'] = { notesRepo };
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+  return configureStore({
+    reducer: notesReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: extra,
+        },
+      }),
+  });
+}
+
+export type AppDispatch = ReturnType<typeof createStore>['dispatch'];
+export type RootState = ReturnType<ReturnType<typeof createStore>['getState']>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
-  unknown,
+  ThunkApi,
   Action<string>
 >;

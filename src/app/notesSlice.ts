@@ -1,71 +1,93 @@
-import { createAction, createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import * as uuid from 'uuid';
-import { Note } from "../domain/note";
-import { AppDispatch } from "./store";
+import { Note, NoteWithFullText } from '../domain/note';
+import { ThunkApi } from './thunkApi';
 
 interface NotesState {
   notes: Note[];
 }
 
 const initialState: NotesState = {
-  notes: [
-    {
-      id: 'c991a900-ddc1-4623-b224-2508856fe86e',
-      title: 'Note title',
-      textBeginning: 'kek lol kek lol',
-      date: new Date().toISOString(),
-    },
-    {
-      id: 'f4f14858-4afb-48d4-bbb7-7d44cf01fe08',
-      title: 'Note title very very long long long long long',
-      textBeginning: 'kek lol kek lol blah blah blah blah aaa aaa',
-      date: new Date(2021, 10, 15).toISOString(),
-    },
-    {
-      id: 'afcc153b-ca75-44f3-b9ed-f26ac9fa4526',
-      title: 'Note title',
-      textBeginning: 'kek lol kek lol',
-      date: new Date(2100, 2, 29).toISOString(),
-    },
-  ],
+  notes: [],
 };
 
-export const createNoteAction = createAsyncThunk<Note, (id: string) => void>(
+function noteWithFullTextToNote(note: NoteWithFullText): Note {
+  return {
+    id: note.id,
+    title: note.title,
+    textBeginning: note.textBeginning,
+    date: note.date.toISOString(),
+  };
+}
+
+export const createNoteAction = createAsyncThunk<Note, (id: string) => void, ThunkApi>(
   'notes/create-async',
-  (cb) => {
+  async (cb, { extra }) => {
     const id = uuid.v4();
     cb(id);
-    return {
+    const newNote: NoteWithFullText = {
       id,
-      title: null,
-      textBeginning: null,
-      date: new Date().toISOString(),
+      html: '',
+      text: '',
+      title: '',
+      textBeginning: '',
+      date: new Date(),
     };
+    await extra.notesRepo.save(newNote);
+    return noteWithFullTextToNote(newNote);
+  },
+);
+
+export const deleteNoteAction = createAsyncThunk<void, string, ThunkApi>(
+  'notes/delete-async',
+  async (id, { extra }) => extra.notesRepo.delete(id),
+);
+
+export const loadNotesAction = createAsyncThunk<Note[], void, ThunkApi>(
+  'notes/load-async',
+  async (_, { extra }) => extra.notesRepo.list(),
+);
+
+type UpdateNoteResult = Note;
+type UpdateNoteArg = Omit<NoteWithFullText, 'date'>;
+export const updateNoteAction = createAsyncThunk<UpdateNoteResult, UpdateNoteArg, ThunkApi>(
+  'notes/update-async',
+  async (arg, { extra }) => {
+    const updatedNote: NoteWithFullText = { 
+      ...arg,
+      title: arg.title.slice(0, 100), // first 100 chars -- beginning of title
+      textBeginning: arg.textBeginning.slice(0, 100), // first 100 chars -- beginning of text
+      date: new Date(),
+    };
+    await extra.notesRepo.save(updatedNote);
+    return noteWithFullTextToNote(updatedNote);
   },
 );
 
 const notesSlice = createSlice({
   name: 'notes',
   initialState,
-  reducers: {
-    deleteNoteAction(state, action: PayloadAction<string>) {
-      state.notes = state.notes.filter((n) => n.id !== action.payload);
-    },
-    updateNoteAction(state, { payload: { id, title, text } }: PayloadAction<{id: string; title: string; text: string}>) {
-      const finded = state.notes.find((n) => n.id === id);
-      if (finded != null) {
-        finded.title = title.slice(0, 100) ?? null; // first 100 chars -- beginning of title
-        finded.textBeginning = text.slice(0, 100) ?? null; // first 100 chars -- beginning of text
-        finded.date = new Date().toISOString();
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(createNoteAction.fulfilled, (state, { payload }) => {
-      state.notes.push(payload);
+      state.notes.unshift(payload);
+    });
+
+    builder.addCase(deleteNoteAction.fulfilled, (state, { meta: { arg: id } }) => {
+      state.notes = state.notes.filter((n) => n.id !== id);
+    });
+
+    builder.addCase(loadNotesAction.fulfilled, (state, { payload }) => {
+      state.notes = payload;
+    });
+
+    builder.addCase(updateNoteAction.fulfilled, (state, { payload }) => {
+      const findedIndex = state.notes.findIndex((n) => n.id === payload.id);
+      if (findedIndex === -1) return;
+      state.notes.splice(findedIndex, 1);
+      state.notes.unshift(payload);
     });
   }
 });
 
 export const notesReducer = notesSlice.reducer;
-export const { updateNoteAction, deleteNoteAction } = notesSlice.actions;

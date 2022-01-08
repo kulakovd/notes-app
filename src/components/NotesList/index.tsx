@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { NotesListItem } from '../NotesListItem';
 import { useQuery } from '../../hooks/useQuery';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { WithToolbar } from '../WithToolbar';
 import { Button } from '../Button';
 import { ReactComponent as AddNoteIcon } from '../../icons/add-note.svg'
-import { createNoteAction } from '../../app/notesSlice';
+import { createNoteAction, loadNotesAction } from '../../app/notesSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const NotesList: React.FC = () => {
@@ -16,6 +16,10 @@ export const NotesList: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch(loadNotesAction());
+  }, [dispatch]);
+
   const handleCreateNote = useCallback(() => {
     const callback = (id: string) => {
       // open new note when it will get the id
@@ -23,9 +27,6 @@ export const NotesList: React.FC = () => {
     }
     dispatch(createNoteAction(callback));
   }, [dispatch, navigate]);
-
-  /** Notes sorted from newer to older */
-  const sorted = useMemo(() => [...notes].sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf()), [notes]);
 
   return (
     <WithToolbar
@@ -36,7 +37,7 @@ export const NotesList: React.FC = () => {
       )}
     >
       <div className="p-2 border-r h-full overflow-y-auto dark:bg-neutral-700 dark:border-gray-900">
-        {sorted.map((note, i) => (
+        {notes.map((note, i) => (
           <NotesListItem
             key={note.id}
             note={note}

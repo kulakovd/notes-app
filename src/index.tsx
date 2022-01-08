@@ -4,16 +4,22 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './index.css';
 import { App } from './components/App';
-import { store } from './app/store';
+import { createStore } from './app/store';
 import reportWebVitals from './reportWebVitals';
+import { notesRepo } from './repository/notes';
+import { NotesRepoContext } from './components/notesRepoContext';
+
+const store = createStore(notesRepo);
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>
+    <NotesRepoContext.Provider value={notesRepo}>
+      <Provider store={store}>
+        <Router>
+          <App />
+        </Router>
+      </Provider>
+    </NotesRepoContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
