@@ -10,7 +10,7 @@ export const App: React.FC = () => {
   const notesListWrapperClasses = 'absolute inset-0 w-screen md:w-3/12';
 
   const workspaceWrapperClasses = classNames(
-    'absolute h-screen w-screen md:left-1/4 md:w-9/12 transition-all', 
+    'absolute top-0 bottom-0 w-screen md:left-1/4 md:w-9/12 transition-all', 
     {
       'pointer-events-none -right-full md:right-0': openedNote == null,
       'right-0': openedNote != null,
@@ -18,7 +18,7 @@ export const App: React.FC = () => {
   );
 
   return (
-    <div className="h-screen text-black dark:text-white selection:bg-yellow-300 dark:selection:bg-yellow-600">
+    <div className="h-full text-black dark:text-white selection:bg-yellow-300 dark:selection:bg-yellow-600">
       <div className={notesListWrapperClasses}>
         <NotesList />
       </div>
