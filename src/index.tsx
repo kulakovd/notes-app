@@ -28,3 +28,15 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+  navigator.serviceWorker.register(swUrl)
+    .then((reg) => {
+      // service worker registred
+      console.log('Registration succeeded. Scope is ' + reg.scope);
+    }).catch((error) => {
+      // service worker registration failed
+      console.log('Registration failed with ' + error);
+    });
+}
