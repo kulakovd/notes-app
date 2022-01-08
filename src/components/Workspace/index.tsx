@@ -21,14 +21,17 @@ export const Workspace: React.FC<WorkspaceProps> = ({ noteId }) => {
 
   const notesRepo = useContext(NotesRepoContext);
 
-  const [note, setNote] = useState<NoteWithFullText>();
+  const [note, setNote] = useState<NoteWithFullText | null>();
 
   useEffect(() => {
-    if (noteId == null || notesRepo == null) return;
-    (async () => {
-      const note = await notesRepo.get(noteId);
-      setNote(note);
-    })();
+    if (noteId == null || notesRepo == null) {
+      setNote(null);
+    } else {
+      (async () => {
+        const note = await notesRepo.get(noteId);
+        setNote(note);
+      })();
+    };
   }, [noteId, notesRepo])
 
   const noteDate = useMemo(() => {

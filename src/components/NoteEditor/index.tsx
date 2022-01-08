@@ -34,7 +34,9 @@ export const NoteEditor: React.FC<{ note: NoteWithFullText, editorRef: RefObject
   const classes = classNames('p-4 flex-1 focus:outline-none', css.editor);
   
   return (
-    <div 
+    <div
+      /* key forces rerender of this div and update its inner html then open an another note */
+      key={note.id}
       ref={contentRef} 
       contentEditable="true" 
       className={classes} 
