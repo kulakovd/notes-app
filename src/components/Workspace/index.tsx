@@ -48,11 +48,6 @@ export const Workspace: React.FC<WorkspaceProps> = ({ noteId }) => {
     navigate('/');
   }, [dispatch, navigate, note]);
 
-  // const handleUpdateNote = useCallback(() => {
-  //   if (note == null || notesRepo == null) return;
-  //   notesRepo.save({ ...note, html });
-  // }, [note, notesRepo]);
-
   return (
     <WithToolbar
       toolbar={(
