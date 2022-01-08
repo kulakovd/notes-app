@@ -18,7 +18,7 @@ export const App: React.FC = () => {
   );
 
   return (
-    <div className="h-screen text-black dark:text-white">
+    <div className="h-screen text-black dark:text-white selection:bg-yellow-300 dark:selection:bg-yellow-600">
       <div className={notesListWrapperClasses}>
         <NotesList />
       </div>
