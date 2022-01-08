@@ -24,9 +24,15 @@ export const NotesListItem: React.FC<NotesListItemProps> = ({
     'py-2 px-8 rounded',
     {
       'bg-amber-200 dark:bg-yellow-600': selected,
-      'hover:bg-neutral-100 dark:hover:bg-neutral-600': !selected,
     }
   );
+
+  const linkClasses = classNames(
+    'rounded', {
+      'hover:outline hover:outline-offset-[-3px] hover:outline-yellow-600 dark:hover:outline-yellow-400 focus:outline focus:outline-offset-[-3px] focus:outline-yellow-600 dark:focus:outline-yellow-400': selected,
+      'hover:bg-neutral-100 dark:hover:bg-neutral-600 focus:bg-neutral-100 dark:focus:bg-neutral-600': !selected,
+    }
+  )
 
   const title = note.title == null || note.title.trim() === '' ? 'Новая заметка' : note.title;
 
@@ -40,7 +46,7 @@ export const NotesListItem: React.FC<NotesListItemProps> = ({
   }, [note.date]);
 
   return (
-    <Link to={`/?note=${note.id}`}>
+    <Link className={linkClasses} to={`/?note=${note.id}`}>
       <div className={classes} role="button">
         <span className="font-bold truncate block">{title}</span>
         <div className="text-xs whitespace-nowrap truncate">
