@@ -37,10 +37,15 @@ export const NotesList: React.FC = () => {
         </div>
       )}
     >
-      <div className="p-2 border-r h-full overflow-y-auto dark:bg-neutral-700 dark:border-gray-900">
+      <div className="flex flex-col p-2 border-r h-full overflow-y-auto dark:bg-neutral-700 dark:border-gray-900">
         <div className="mb-2">
           <SearchBox />
         </div>
+        {notes.length === 0 && (
+          <div className="flex-1 flex items-center justify-center text-neutral-500">
+            нет заметок
+          </div>
+        )}
         {notes.map((note, i) => (
           <NotesListItem
             key={note.id}
