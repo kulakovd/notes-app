@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch } from '../../app/hooks';
 import { updateNoteAction } from '../../app/notesSlice';
 import { Note, NoteWithFullText } from '../../domain/note';
@@ -7,10 +7,10 @@ import { getTitleAndTextFromHtml, TitleAndText } from '../../helpers/get-note-ti
 import { throttle } from '../../helpers/throttle';
 import css from './style.module.css';
 
-export const NoteEditor: React.FC<{ note: NoteWithFullText }> = ({ note }) => {
+export const NoteEditor: React.FC<{ note: NoteWithFullText, editorRef: RefObject<HTMLDivElement> }> = ({ note, editorRef }) => {
   const dispatch = useAppDispatch();
 
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = editorRef;
   const html = useMemo(() => note.html == '' ? `<h1><br /></h1>` : note.html, [note.id]);
 
   const handleInput = useCallback(

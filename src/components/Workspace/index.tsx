@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { ReactComponent as BackIcon } from '../../icons/back.svg';
@@ -9,6 +9,7 @@ import { deleteNoteAction, updateNoteAction } from '../../app/notesSlice';
 import { NoteWithFullText } from '../../domain/note';
 import { NoteEditor } from '../NoteEditor';
 import { NotesRepoContext } from '../notesRepoContext';
+import { NoteEditorToolbar } from '../NoteEditorToolbar';
 
 export interface WorkspaceProps {
   noteId?: string | null;
@@ -48,22 +49,30 @@ export const Workspace: React.FC<WorkspaceProps> = ({ noteId }) => {
     navigate('/');
   }, [dispatch, navigate, note]);
 
+  const editorRef = useRef<HTMLDivElement>(null);
+
   return (
     <WithToolbar
       toolbar={(
-        <div className="flex justify-center md:justify-start">
-          {note && (<Button icon={<DeleteIcon />} text="Удалить заметку" onClick={handleDeleteNote} />)}
+        <div className="md:flex md:justify-between">
+          {note && (
+            <div className="hidden md:block">
+              <Button icon={<DeleteIcon />} text="Удалить заметку" onClick={handleDeleteNote} />
+            </div>
+          )}
+          {note && <NoteEditorToolbar editorRef={editorRef} />}
         </div>
       )}
     >
       <div className="flex flex-col h-full bg-white dark:bg-neutral-800">
-        <div className="md:hidden p-2 flex-shrink-0">
+        <div className="md:hidden p-2 flex-shrink-0 flex justify-between">
           <Button icon={<BackIcon />} text="Заметки" onClick={() => navigate('/')} />
+          <Button icon={<DeleteIcon />} text="Удалить" onClick={handleDeleteNote} />
         </div>
         {note && (
           <div className="flex flex-col flex-1 overflow-y-auto">
             <div className="text-center text-xs text-gray-400 dark:text-gray-500 font-semibold mt-2">{noteDate}</div>
-            <NoteEditor note={note} />
+            <NoteEditor note={note} editorRef={editorRef} />
           </div>
         )}
       </div>
