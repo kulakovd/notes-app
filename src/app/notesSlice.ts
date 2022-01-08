@@ -43,9 +43,15 @@ export const deleteNoteAction = createAsyncThunk<void, string, ThunkApi>(
   async (id, { extra }) => extra.notesRepo.delete(id),
 );
 
-export const loadNotesAction = createAsyncThunk<Note[], void, ThunkApi>(
+export const loadNotesAction = createAsyncThunk<Note[], string | undefined, ThunkApi>(
   'notes/load-async',
-  async (_, { extra }) => extra.notesRepo.list(),
+  async (arg, { extra }) => {
+    if (arg != null) {
+      return extra.notesRepo.search(arg);
+    } else {
+      return extra.notesRepo.list();
+    }
+  },
 );
 
 type UpdateNoteResult = Note;

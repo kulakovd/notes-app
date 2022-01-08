@@ -7,6 +7,7 @@ import { Button } from '../Button';
 import { ReactComponent as AddNoteIcon } from '../../icons/add-note.svg'
 import { createNoteAction, loadNotesAction } from '../../app/notesSlice';
 import { useNavigate } from 'react-router-dom';
+import { SearchBox } from '../SearchBox';
 
 export const NotesList: React.FC = () => {
   const query = useQuery();
@@ -37,6 +38,9 @@ export const NotesList: React.FC = () => {
       )}
     >
       <div className="p-2 border-r h-full overflow-y-auto dark:bg-neutral-700 dark:border-gray-900">
+        <div className="mb-2">
+          <SearchBox />
+        </div>
         {notes.map((note, i) => (
           <NotesListItem
             key={note.id}
