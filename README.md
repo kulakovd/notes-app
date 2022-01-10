@@ -41,7 +41,7 @@ You will also see any lint errors in the console.
 Builds the app and runs it with `http-server`.
 It's useful if you like to test Service Worker.
 
-Server Worker doesn't work with `yand start`
+Server Worker doesn't work with `yarn start`
 
 ### `yarn build`
 
