@@ -1,6 +1,6 @@
 # Notes App
 
-Exactly like Apple's notes app but web (so windows users can write notes too).
+Exactly like Apple's notes app but web version (so windows users can write notes too).
 
 [Try it out right now (hosted on firebase)](https://notes-app-29c2d.web.app)
 
@@ -17,11 +17,11 @@ Exactly like Apple's notes app but web (so windows users can write notes too).
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Used libs:
+Libs used:
 
 - **Redux** for the state managment
-- **TailwindCSS** to avoid write css
-- **Dexie** to save notes in IndexedDB
+- **TailwindCSS** to avoid writing css
+- **Dexie** to store notes in the IndexedDB
 - **Workbox** to make web offline
 
 ## Available Scripts
@@ -38,10 +38,10 @@ You will also see any lint errors in the console.
 
 ### `yarn start:prod`
 
-Builds the app and runs it with http-server.
+Builds the app and runs it with `http-server`.
 It's useful if you like to test Service Worker.
 
-Server Worker don't work with `yand start`
+Server Worker doesn't work with `yand start`
 
 ### `yarn build`
 
